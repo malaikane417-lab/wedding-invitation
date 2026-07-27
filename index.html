@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Khadijah & Muhammad - Wedding Invitation</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Great+Vibes&family=Lora:ital,wght@0,400;0,500;1,400&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; min-height: 100vh; scroll-behavior: smooth; overflow-x: hidden; font-family: 'Cormorant Garamond', serif; }
+
+/* ===================== SHARED BG WRAPPER ===================== */
+.bg-wrap {
+  width: 100vw;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+}
+
+/* ===================== ENVELOPE SECTION ===================== */
+#envelope-section {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background-color: #e8d5b7;
+  background-image: url('src/envelope,best and retreat,Faqs background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+#envelope-section.hidden {
+  opacity: 0; visibility: hidden; pointer-events: none;
+}
+
+.envelope-wrapper {
+  position: relative;
+  width: 420px; height: 300px;
+  cursor: pointer;
+  perspective: 1000px;
+}
+
+.envelope-body {
+  position: absolute;
+  width: 100%; height: 100%;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 15px 50px rgba(0,0,0,0.4);
+}
+
+.envelope-body img { width: 100%; height: 100%; object-fit: cover; }
+
+.envelope-flap {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 55%;
+  transform-origin: top center;
+  transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 2;
+  clip-path: polygon(0 0, 50% 100%, 100% 0);
+  overflow: hidden;
+}
+
+.envelope-flap img { width: 100%; height: 170%; object-fit: cover; }
+.envelope-wrapper.opened .envelope-flap { transform: rotateX(180deg); }
+
+.envelope-seal {
+  position: absolute;
+  top: 40%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50px; height: 50px;
+  background: radial-gradient(circle, #c9a96e, #8b6914);
+  border-radius: 50%;
+  z-index: 3;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Great Vibes', cursive;
+  font-size: 16px; color: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  transition: opacity 0.5s ease;
+}
+
+.envelope-wrapper.opened .envelope-seal { opacity: 0; }
+
+.invitation-card {
+  position: absolute;
+  top: 10%; left: 5%;
+  width: 90%; height: 80%;
+  background: linear-gradient(145deg, #fdf8f0, #f5e6d0);
+  border-radius: 6px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  transform: translateY(0);
+  opacity: 0;
+  transition: opacity 0.5s ease 0.6s, transform 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.4s;
+  z-index: 1;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+  pointer-events: none;
+}
+
+.envelope-wrapper.opened .invitation-card {
+  opacity: 1;
+  transform: translateY(-120%);
+  pointer-events: auto;
+}
+
+.invitation-card .card-km {
+  font-family: 'Great Vibes', cursive;
+  font-size: 42px; color: #800000;
+  line-height: 1.3; text-align: center; font-style: italic;
+}
+
+.invitation-card .card-invite {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px; color: #800000;
+  text-transform: uppercase; letter-spacing: 3px;
+  margin-top: 8px; font-style: italic;
+}
+
+.envelope-click-hint {
+  position: absolute;
+  bottom: -50px; left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px; color: rgba(255,255,255,0.7);
+  letter-spacing: 2px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; transform: translateX(-50%) translateY(0); }
+  50% { opacity: 1; transform: translateX(-50%) translateY(-5px); }
+}
+
+/* ===================== MAIN CONTENT ===================== */
+.main-content {
+  opacity: 0;
+  transition: opacity 1s ease 0.5s;
+  pointer-events: none;
+}
+.main-content.visible { opacity: 1; pointer-events: all; }
+
+/* ===================== HERO ===================== */
+.hero-wrap {
+  background-color: #f5e6d0;
+  background-image: url('src/hero background.jpg');
+}
+
+.hero-inner { text-align: center; position: relative; z-index: 2; }
+
+.hero-names {
+  font-family: 'Great Vibes', cursive;
+  font-size: 72px; color: #800000;
+  text-shadow: 0 3px 20px rgba(0,0,0,0.3);
+  line-height: 1.2;
+  opacity: 0; transform: translateY(50px);
+  animation: heroFadeIn 1.5s ease forwards;
+}
+
+.hero-ampersand {
+  font-family: 'Playfair Display', serif;
+  font-size: 48px; color: #d4a94c;
+  display: block; margin: 5px 0;
+}
+
+.hero-date {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px; color: #000;
+  letter-spacing: 4px; margin-top: 20px;
+  text-transform: uppercase;
+  text-shadow: 0 1px 6px rgba(255,255,255,0.5);
+  opacity: 0; transform: translateY(30px);
+  animation: heroFadeIn 1.5s ease 0.5s forwards;
+}
+
+.scroll-indicator {
+  position: absolute;
+  bottom: 40px; left: 50%;
+  transform: translateX(-50%);
+  z-index: 2; text-align: center;
+  opacity: 0;
+  animation: heroFadeIn 1.5s ease 1.2s forwards, bounce 2s ease-in-out 2.5s infinite;
+}
+
+.scroll-indicator span {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 14px; color: #000;
+  letter-spacing: 3px; text-transform: uppercase;
+  display: block; margin-bottom: 8px;
+}
+
+.scroll-arrow {
+  width: 24px; height: 24px;
+  border-right: 2px solid #000;
+  border-bottom: 2px solid #000;
+  transform: rotate(45deg);
+  margin: 0 auto;
+}
+
+@keyframes heroFadeIn {
+  from { opacity: 0; transform: translateY(50px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(10px); }
+}
+
+/* ===================== SECTION COMMON ===================== */
+.section-title {
+  font-family: 'Great Vibes', cursive;
+  font-size: 52px; text-align: center;
+  margin-bottom: 10px; color: #800000;
+}
+
+.section-subtitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px; text-align: center;
+  color: #000; letter-spacing: 3px;
+  text-transform: uppercase; margin-bottom: 40px;
+}
+
+/* ===================== OUR STORY ===================== */
+.our-story-wrap {
+  background-color: #fdf5eb;
+  background-image: url('src/our story background.jpg');
+}
+
+.our-story-inner { max-width: 700px; text-align: center; }
+
+.our-story-text {
+  font-family: 'Lora', serif;
+  font-size: 18px; line-height: 1.9;
+  color: #000; font-style: italic;
+}
+
+/* ===================== WEDDING DETAILS ===================== */
+.wedding-details-wrap {
+  background-color: #fdf5eb;
+  background-image: url('src/footer,wedding details background.jpg');
+}
+
+.wedding-details-inner {
+  max-width: 800px; width: 100%; text-align: center;
+}
+
+.details-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 50px; margin-top: 20px;
+}
+
+.detail-card {
+  padding: 40px 30px;
+  background: rgba(255,255,255,0.85);
+  border-radius: 8px;
+  border: 1px solid rgba(201,169,110,0.4);
+}
+
+.detail-card h3 {
+  font-family: 'Great Vibes', cursive;
+  font-size: 32px; color: #800000; margin-bottom: 15px;
+}
+
+.detail-card .detail-date {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px; color: #000;
+  letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px;
+}
+
+.detail-card .detail-venue {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px; color: #000; margin-bottom: 5px;
+}
+
+.detail-card .detail-time {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px; color: #000; margin-top: 8px;
+}
+
+/* ===================== BEST & RETREAT ===================== */
+.best-retreat-wrap {
+  background-color: #2c4a3e;
+  background-image: url('src/envelope,best and retreat,Faqs background.jpg');
+}
+
+.best-retreat-inner { max-width: 800px; width: 100%; text-align: center; }
+
+.hotel-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+
+.hotel-card {
+  background: rgba(255,255,255,0.85);
+  border: 1px solid rgba(201,169,110,0.3);
+  border-radius: 10px; padding: 30px 35px;
+  text-align: left;
+  display: flex; justify-content: space-between; align-items: center;
+  transition: transform 0.3s ease;
+}
+
+.hotel-card:hover { transform: translateY(-3px); }
+
+.hotel-name-ar { font-size: 20px; color: #000; margin-bottom: 2px; }
+.hotel-name-en { font-family: 'Playfair Display', serif; font-size: 18px; color: #800000; margin-bottom: 5px; }
+.hotel-desc { font-size: 15px; color: #000; }
+.hotel-distance { font-family: 'Cormorant Garamond', serif; font-size: 15px; color: #800000; white-space: nowrap; letter-spacing: 1px; }
+
+/* ===================== FAQS ===================== */
+.faqs-wrap {
+  background-color: #2c4a3e;
+  background-image: url('src/envelope,best and retreat,Faqs background.jpg');
+}
+
+.faqs-inner { max-width: 700px; width: 100%; text-align: center; }
+
+.faq-item {
+  background: rgba(255,255,255,0.85);
+  border: 1px solid rgba(201,169,110,0.3);
+  border-radius: 8px; margin-bottom: 15px;
+  overflow: hidden; transition: background 0.3s ease;
+}
+
+.faq-item:hover { background: rgba(255,255,255,0.95); }
+
+.faq-question {
+  width: 100%; padding: 20px 25px;
+  background: none; border: none; color: #000;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px; text-align: left; cursor: pointer;
+  display: flex; justify-content: space-between; align-items: center;
+  letter-spacing: 0.5px;
+}
+
+.faq-question .faq-icon {
+  font-size: 24px; color: #800000;
+  transition: transform 0.3s ease; flex-shrink: 0; margin-left: 15px;
+}
+
+.faq-item.active .faq-icon { transform: rotate(45deg); }
+
+.faq-answer {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.4s ease;
+  padding: 0 25px;
+}
+
+.faq-item.active .faq-answer { max-height: 200px; padding: 0 25px 20px; }
+
+.faq-answer p {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px; color: #000; line-height: 1.7;
+}
+
+/* ===================== FOOTER ===================== */
+.footer-wrap {
+  background-color: #fdf5eb;
+  background-image: url('src/footer,wedding details background.jpg');
+  width: 100vw;
+  min-height: 100vh;
+}
+
+.footer-inner { text-align: center; }
+
+.footer-names {
+  font-family: 'Great Vibes', cursive;
+  font-size: 48px; color: #800000; margin-bottom: 10px;
+}
+
+.footer-date {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px; color: #000;
+  letter-spacing: 3px; margin-bottom: 15px;
+}
+
+.footer-message {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px; color: #000;
+  font-style: italic; margin-bottom: 25px;
+}
+
+.footer-divider { width: 60px; height: 1px; background: #800000; margin: 0 auto 25px; }
+
+.footer-names-bottom {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px; color: #000; letter-spacing: 2px;
+}
+
+/* ===================== SCROLL ANIMATIONS ===================== */
+.reveal {
+  opacity: 0; transform: translateY(40px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal.active { opacity: 1; transform: translateY(0); }
+
+.slide-left {
+  opacity: 0; transform: translateX(-60px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.slide-left.active { opacity: 1; transform: translateX(0); }
+
+.slide-right {
+  opacity: 0; transform: translateX(60px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.slide-right.active { opacity: 1; transform: translateX(0); }
+
+.line-draw {
+  width: 0; height: 2px;
+  background: #800000; margin: 40px auto;
+  transition: width 1s ease;
+}
+.line-draw.active { width: 120px; }
+
+.word-reveal { opacity: 1; }
+.word-reveal .word {
+  display: inline-block;
+  opacity: 0; transform: translateY(20px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.word-reveal.active .word { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- ========== ENVELOPE ========== -->
+<div id="envelope-section">
+  <div class="envelope-wrapper" id="envelope" onclick="openEnvelope()">
+    <div class="envelope-body">
+      <img src="src/envelope.jpg" alt="Envelope">
+    </div>
+    <div class="envelope-flap">
+      <img src="src/envelope.jpg" alt="Flap">
+    </div>
+    <div class="envelope-seal">K&M</div>
+    <div class="invitation-card">
+      <div class="card-km">K&M</div>
+      <div class="card-invite">you are invited</div>
+    </div>
+    <div class="envelope-click-hint">Click to open</div>
+  </div>
+</div>
+
+<!-- ========== MAIN CONTENT ========== -->
+<div class="main-content" id="mainContent">
+
+  <section class="bg-wrap hero-wrap" id="hero" style="position:relative;">
+    <div class="hero-inner">
+      <div class="hero-names">Khadijah<span class="hero-ampersand">&</span>Muhammad</div>
+      <div class="hero-date">Monday &middot; 17 January 2026</div>
+    </div>
+    <div class="scroll-indicator">
+      <span>Scroll</span>
+      <div class="scroll-arrow"></div>
+    </div>
+  </section>
+
+  <section class="bg-wrap our-story-wrap" id="our-story">
+    <div class="our-story-inner">
+      <h2 class="section-title reveal">Our Story</h2>
+      <div class="section-subtitle reveal">How it all began</div>
+      <div class="line-draw reveal"></div>
+      <p class="our-story-text word-reveal">
+        It all started with a cup of coffee, a simple moment that somehow turned into something wonderful. A quick hello led to a laugh, then to a conversation that neither of us wanted to end. One cup of coffee turned into a first date, a first date turned into countless memories, and soon enough we couldn't imagine life without each other. Through long talks and quiet moments that felt like magic, we found our forever. What began as a simple coffee became the sweetest story, and now we're saying "yes" to a lifetime of love, laughter, and coffee together.
+      </p>
+    </div>
+  </section>
+
+  <section class="bg-wrap wedding-details-wrap" id="wedding-details">
+    <div class="wedding-details-inner">
+      <h2 class="section-title reveal">Wedding Details</h2>
+      <div class="section-subtitle reveal">Join us in celebrating our special day</div>
+      <div class="line-draw reveal"></div>
+      <div class="details-grid">
+        <div class="detail-card slide-left">
+          <h3>Nikah Ceremony</h3>
+          <div class="detail-date">Monday 17th January 2026</div>
+          <div class="detail-venue">The Biltmore<br>Al Madinah Hotel</div>
+          <div class="detail-time">Time of arrival: 7:30 PM</div>
+        </div>
+        <div class="detail-card slide-right">
+          <h3>The Reception</h3>
+          <div class="detail-date">Monday 17th January 2026</div>
+          <div class="detail-venue">The Biltmore<br>Al Madinah Hotel</div>
+          <div class="detail-time">Time of arrival: 7:30 PM</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-wrap best-retreat-wrap" id="best-retreat">
+    <div class="best-retreat-inner">
+      <h2 class="section-title reveal">Where to Stay</h2>
+      <div class="section-subtitle reveal">Recommended hotels nearby</div>
+      <div class="line-draw reveal"></div>
+      <div class="hotel-grid">
+        <div class="hotel-card slide-left">
+          <div>
+            <div class="hotel-name-ar">&#1605;&#1603;&#1575;&#1585;&#1605; &#1575;&#1604;&#1576;&#1585;&#1603;&#1577;</div>
+            <div class="hotel-name-en">Makarem Burj Al Madinah</div>
+            <div class="hotel-desc">Central plaza, spacious family rooms</div>
+          </div>
+          <div class="hotel-distance">4 min walk</div>
+        </div>
+        <div class="hotel-card slide-left">
+          <div>
+            <div class="hotel-name-ar">&#1601;&#1606;&#1583;&#1602; &#1576;&#1608;&#1604;&#1605;&#1575;&#1606; &#1586;&#1605;&#1586;&#1605;</div>
+            <div class="hotel-name-en">Pullman Zamzam Madina</div>
+            <div class="hotel-desc">Steps from the Haram, elegant suites</div>
+          </div>
+          <div class="hotel-distance">6 min walk</div>
+        </div>
+        <div class="hotel-card slide-left">
+          <div>
+            <div class="hotel-name-ar">&#1583;&#1575;&#1585; &#1575;&#1604;&#1578;&#1602;&#1608;&#1609;</div>
+            <div class="hotel-name-en">Dar Al Taqwa Hotel</div>
+            <div class="hotel-desc">Overlooking the Prophet's Mosque</div>
+          </div>
+          <div class="hotel-distance">8 min walk</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-wrap faqs-wrap" id="faqs">
+    <div class="faqs-inner">
+      <h2 class="section-title reveal">Questions</h2>
+      <div class="section-subtitle reveal">Frequently asked questions</div>
+      <div class="line-draw reveal"></div>
+      <div class="faq-item reveal">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Is transportation provided?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>Yes, transportation will be provided from the recommended hotels to the venue and back for all guests.</p>
+        </div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Are children welcome?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>Absolutely! Children of all ages are welcome to join us in celebrating this joyous occasion.</p>
+        </div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          What is the dress code?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>Guests are encouraged to dress in formal or semi-formal attire. We look forward to seeing you in your finest.</p>
+        </div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-question" onclick="toggleFaq(this)">
+          Do you have any recommendations for activities or places to visit in Madinah?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <p>Madinah is rich with history and spirituality. We recommend visiting the Prophet's Mosque, Quba Mosque, and exploring the local markets and historical sites nearby.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-wrap footer-wrap" id="footer">
+    <div class="footer-inner">
+      <div class="footer-names reveal">Khadijah & Muhammad</div>
+      <div class="footer-date reveal">17 &middot; 01 &middot; 2026 &middot; Al Madinah</div>
+      <div class="footer-message reveal">We can't wait to celebrate with you.</div>
+      <div class="footer-divider"></div>
+      <div class="footer-names-bottom reveal">Khadijah & Muhammad</div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+function openEnvelope() {
+  document.getElementById('envelope').classList.add('opened');
+  setTimeout(function() {
+    document.getElementById('envelope-section').classList.add('hidden');
+    document.getElementById('mainContent').classList.add('visible');
+  }, 1600);
+}
+
+function toggleFaq(btn) {
+  var item = btn.closest('.faq-item');
+  var wasActive = item.classList.contains('active');
+  document.querySelectorAll('.faq-item').forEach(function(faq) { faq.classList.remove('active'); });
+  if (!wasActive) item.classList.add('active');
+}
+
+function splitWords() {
+  var el = document.querySelector('.word-reveal');
+  if (!el || el.dataset.split === 'true') return;
+  el.dataset.split = 'true';
+  var text = el.textContent.trim();
+  el.innerHTML = text.split(/\s+/).map(function(w, i) {
+    return '<span class="word" style="transition-delay:' + (i * 30) + 'ms">' + w + '</span>';
+  }).join(' ');
+}
+splitWords();
+
+function revealOnScroll() {
+  var wh = window.innerHeight;
+  document.querySelectorAll('.reveal, .slide-left, .slide-right, .line-draw').forEach(function(el) {
+    if (el.getBoundingClientRect().top < wh - 80) el.classList.add('active');
+  });
+  document.querySelectorAll('.word-reveal').forEach(function(el) {
+    if (el.getBoundingClientRect().top < wh - 80) el.classList.add('active');
+  });
+  document.querySelectorAll('.details-grid, .hotel-grid').forEach(function(grid) {
+    if (grid.getBoundingClientRect().top < wh - 80) {
+      grid.querySelectorAll('.slide-left, .slide-right').forEach(function(child, i) {
+        setTimeout(function() { child.classList.add('active'); }, i * 200);
+      });
+    }
+  });
+}
+
+window.addEventListener('scroll', revealOnScroll);
+window.addEventListener('load', revealOnScroll);
+</script>
+
+</body>
+</html>
