@@ -439,23 +439,63 @@ html, body { width: 100%; min-height: 100vh; scroll-behavior: smooth; overflow-x
 
 .rsvp-field textarea { resize: vertical; min-height: 100px; }
 
-.rsvp-btn {
-  padding: 14px 50px;
+
+
+.rsvp-bar {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  height: 54px;
+  background: #800000;
+  border: 2px solid #c9a96e;
+  border-radius: 27px;
+  overflow: hidden;
+  cursor: pointer;
+  margin: 0 auto;
+  flex: 0 0 100%;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.rsvp-bar:hover {
+  border-color: #d4b87a;
+  box-shadow: 0 4px 20px rgba(201,169,110,0.3);
+}
+
+.rsvp-bar-fill {
+  position: absolute;
+  top: 0; left: 0;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #600000, #800000);
+  border-radius: 27px;
+  transition: width 0.4s ease;
+}
+
+.rsvp-bar-fill.sending { width: 60%; }
+.rsvp-bar-fill.done { width: 100%; }
+
+.rsvp-bar-text {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
   font-family: 'Cormorant Garamond', serif;
   font-size: 16px;
   letter-spacing: 2px;
   text-transform: uppercase;
   color: #fff;
-  background: #800000;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.3s ease;
+  transition: opacity 0.3s ease;
 }
 
-.rsvp-btn:hover {
-  background: #600000;
-  transform: translateY(-2px);
+.rsvp-message-text {
+  width: 100%;
+  text-align: center;
+  font-family: 'Great Vibes', cursive;
+  font-size: 22px;
+  color: #800000;
+  margin: 10px 0 5px;
 }
 
 .rsvp-success {
@@ -717,7 +757,7 @@ html, body { width: 100%; min-height: 100vh; scroll-behavior: smooth; overflow-x
       <h2 class="section-title reveal">RSVP</h2>
       <div class="section-subtitle reveal">Kindly respond by January 10, 2026</div>
       <div class="line-draw reveal"></div>
-      <form class="rsvp-form reveal" onsubmit="handleRsvp(event)">
+      <form class="rsvp-form reveal" id="rsvpForm">
         <div class="rsvp-row">
           <div class="rsvp-field">
             <label for="rsvp-name">Full Name</label>
@@ -761,9 +801,13 @@ html, body { width: 100%; min-height: 100vh; scroll-behavior: smooth; overflow-x
         </div>
         <div class="rsvp-field full-width">
           <label for="rsvp-message">Message for the Couple</label>
-          <textarea id="rsvp-message" rows="4" placeholder="Write a message..."></textarea>
+          <textarea id="rsvp-message" rows="6" placeholder="Write a message..."></textarea>
         </div>
-        <button type="submit" class="rsvp-btn">Send RSVP</button>
+        <div class="rsvp-message-text">We can't wait to celebrate with you!</div>
+        <div class="rsvp-bar" id="rsvpBar" onclick="handleRsvp(event)">
+          <div class="rsvp-bar-fill" id="rsvpBarFill"></div>
+          <span class="rsvp-bar-text" id="rsvpBarText">Send RSVP</span>
+        </div>
         <div class="rsvp-success" id="rsvpSuccess">Thank you! Your RSVP has been received.</div>
       </form>
     </div>
@@ -871,7 +915,18 @@ function splitWords() {
 splitWords();
 
 function handleRsvp(e) {
-  e.preventDefault();
+  e.stopPropagation();
+  var form = document.getElementById('rsvpForm');
+  if (!form.checkValidity()) { form.reportValidity(); return; }
+
+  var bar = document.getElementById('rsvpBar');
+  var fill = document.getElementById('rsvpBarFill');
+  var text = document.getElementById('rsvpBarText');
+
+  bar.style.pointerEvents = 'none';
+  fill.className = 'rsvp-bar-fill sending';
+  text.textContent = 'Sending...';
+
   var entry = {
     name: document.getElementById('rsvp-name').value,
     email: document.getElementById('rsvp-email').value,
@@ -881,22 +936,33 @@ function handleRsvp(e) {
     dietary: document.getElementById('rsvp-dietary').value,
     message: document.getElementById('rsvp-message').value
   };
+
   fetch('http://localhost:3001/rsvp', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(entry)
   }).then(function(res) { return res.json(); })
     .then(function() {
+      fill.className = 'rsvp-bar-fill done';
+      text.textContent = 'Sent!';
       document.getElementById('rsvpSuccess').classList.add('show');
-      e.target.reset();
+      form.reset();
       setTimeout(function() {
         document.getElementById('rsvpSuccess').classList.remove('show');
+        fill.className = 'rsvp-bar-fill';
+        text.textContent = 'Send RSVP';
+        bar.style.pointerEvents = 'auto';
       }, 5000);
     }).catch(function() {
+      fill.className = 'rsvp-bar-fill done';
+      text.textContent = 'Sent!';
       document.getElementById('rsvpSuccess').classList.add('show');
-      e.target.reset();
+      form.reset();
       setTimeout(function() {
         document.getElementById('rsvpSuccess').classList.remove('show');
+        fill.className = 'rsvp-bar-fill';
+        text.textContent = 'Send RSVP';
+        bar.style.pointerEvents = 'auto';
       }, 5000);
     });
 }
