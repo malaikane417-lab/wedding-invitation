@@ -52,6 +52,7 @@ html, body { width: 100%; min-height: 100vh; scroll-behavior: smooth; overflow-x
   width: 420px; height: 300px;
   cursor: pointer;
   perspective: 1000px;
+  overflow: visible;
 }
 
 .envelope-body {
@@ -97,15 +98,15 @@ html, body { width: 100%; min-height: 100vh; scroll-behavior: smooth; overflow-x
 
 .invitation-card {
   position: absolute;
-  top: 10%; left: 5%;
-  width: 90%; height: 80%;
+  top: 50%; left: 50%;
+  width: 85%; height: 75%;
   background: linear-gradient(145deg, #fdf8f0, #f5e6d0);
   border-radius: 6px;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  transform: translateY(0);
+  transform: translate(-50%, -50%) translateY(0);
   opacity: 0;
-  transition: opacity 0.5s ease 0.6s, transform 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.4s;
+  transition: opacity 0.6s ease 0.7s;
   z-index: 1;
   box-shadow: 0 4px 15px rgba(0,0,0,0.15);
   pointer-events: none;
@@ -113,7 +114,7 @@ html, body { width: 100%; min-height: 100vh; scroll-behavior: smooth; overflow-x
 
 .envelope-wrapper.opened .invitation-card {
   opacity: 1;
-  transform: translateY(-120%);
+  transform: translate(-50%, -50%) translateY(-10px);
   pointer-events: auto;
 }
 
@@ -143,6 +144,26 @@ html, body { width: 100%; min-height: 100vh; scroll-behavior: smooth; overflow-x
 @keyframes pulse {
   0%, 100% { opacity: 0.4; transform: translateX(-50%) translateY(0); }
   50% { opacity: 1; transform: translateX(-50%) translateY(-5px); }
+}
+
+.music-btn {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  z-index: 10000;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  border: 2px solid #800000;
+  background: rgba(255,255,255,0.9);
+  color: #800000;
+  font-size: 22px;
+  cursor: pointer;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  transition: transform 0.3s, background 0.3s;
+}
+.music-btn:hover {
+  background: #800000;
+  color: #fff;
+  transform: scale(1.1);
 }
 
 /* ===================== MAIN CONTENT ===================== */
@@ -317,6 +338,140 @@ html, body { width: 100%; min-height: 100vh; scroll-behavior: smooth; overflow-x
 .hotel-desc { font-size: 15px; color: #000; }
 .hotel-distance { font-family: 'Cormorant Garamond', serif; font-size: 15px; color: #800000; white-space: nowrap; letter-spacing: 1px; }
 
+/* ===================== RSVP ===================== */
+.rsvp-wrap {
+  background-color: #fdf5eb;
+  background-image: url('src/our story background.jpg');
+}
+
+/* ===================== MAP ===================== */
+.map-section {
+  width: 100vw;
+  min-height: 100vh;
+  background-color: #fdf5eb;
+  background-image: url('src/our story background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+}
+
+.map-header { margin-bottom: 30px; }
+
+.map-container {
+  width: 100%;
+  max-width: 900px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(128,0,0,0.25);
+  border: 3px solid #800000;
+  background: #fff;
+}
+
+.map-container iframe {
+  display: block;
+  width: 100%;
+  height: 450px;
+  border: 0;
+}
+
+.rsvp-inner { max-width: 750px; width: 100%; text-align: center; }
+
+.rsvp-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.rsvp-row {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  justify-content: center;
+}
+
+.rsvp-field {
+  flex: 1;
+  min-width: 280px;
+  text-align: left;
+}
+
+.rsvp-field.full-width {
+  width: 100%;
+}
+
+.rsvp-field label {
+  display: block;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px;
+  color: #000;
+  margin-bottom: 6px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.rsvp-field input,
+.rsvp-field select,
+.rsvp-field textarea {
+  width: 100%;
+  padding: 12px 16px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  color: #000;
+  background: rgba(255,255,255,0.85);
+  border: 1px solid rgba(201,169,110,0.4);
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.rsvp-field input:focus,
+.rsvp-field select:focus,
+.rsvp-field textarea:focus {
+  border-color: #800000;
+  box-shadow: 0 0 0 2px rgba(128,0,0,0.15);
+}
+
+.rsvp-field textarea { resize: vertical; min-height: 100px; }
+
+.rsvp-btn {
+  padding: 14px 50px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #fff;
+  background: #800000;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.rsvp-btn:hover {
+  background: #600000;
+  transform: translateY(-2px);
+}
+
+.rsvp-success {
+  display: none;
+  width: 100%;
+  padding: 15px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  color: #800000;
+  background: rgba(255,255,255,0.85);
+  border-radius: 6px;
+  margin-top: 10px;
+}
+
+.rsvp-success.show { display: block; }
+
 /* ===================== FAQS ===================== */
 .faqs-wrap {
   background-color: #2c4a3e;
@@ -452,6 +607,12 @@ html, body { width: 100%; min-height: 100vh; scroll-behavior: smooth; overflow-x
   </div>
 </div>
 
+<!-- Background Music -->
+<audio id="bgMusic" loop>
+  <source src="music/mp3.mp3" type="audio/mpeg">
+</audio>
+<button id="musicToggle" class="music-btn" onclick="toggleMusic()">&#9835;</button>
+
 <!-- ========== MAIN CONTENT ========== -->
 <div class="main-content" id="mainContent">
 
@@ -533,6 +694,81 @@ html, body { width: 100%; min-height: 100vh; scroll-behavior: smooth; overflow-x
     </div>
   </section>
 
+  <!-- Map -->
+  <section class="map-section" id="map">
+    <div class="map-header">
+      <h2 class="section-title reveal">Find Us Here</h2>
+      <div class="section-subtitle reveal">The Biltmore Al Madinah Hotel</div>
+      <div class="line-draw reveal"></div>
+    </div>
+    <div class="map-container reveal">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3631.4!2d39.61!3d24.47!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDTCsDI4JzEyLjAiTiAzOcKwMzYnMzYuMCJF!5e0!3m2!1sen!2ssa!4v1"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+  </section>
+
+  <!-- RSVP -->
+  <section class="bg-wrap rsvp-wrap" id="rsvp">
+    <div class="rsvp-inner">
+      <h2 class="section-title reveal">RSVP</h2>
+      <div class="section-subtitle reveal">Kindly respond by January 10, 2026</div>
+      <div class="line-draw reveal"></div>
+      <form class="rsvp-form reveal" onsubmit="handleRsvp(event)">
+        <div class="rsvp-row">
+          <div class="rsvp-field">
+            <label for="rsvp-name">Full Name</label>
+            <input type="text" id="rsvp-name" placeholder="Your full name" required>
+          </div>
+          <div class="rsvp-field">
+            <label for="rsvp-email">Email</label>
+            <input type="email" id="rsvp-email" placeholder="Your email" required>
+          </div>
+        </div>
+        <div class="rsvp-row">
+          <div class="rsvp-field">
+            <label for="rsvp-phone">Phone Number</label>
+            <input type="tel" id="rsvp-phone" placeholder="Your phone number">
+          </div>
+          <div class="rsvp-field">
+            <label for="rsvp-guests">Number of Guests</label>
+            <select id="rsvp-guests" required>
+              <option value="" disabled selected>Select</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5+</option>
+            </select>
+          </div>
+        </div>
+        <div class="rsvp-row">
+          <div class="rsvp-field">
+            <label for="rsvp-attendance">Will you attend?</label>
+            <select id="rsvp-attendance" required>
+              <option value="" disabled selected>Select</option>
+              <option value="yes">Joyfully Accept</option>
+              <option value="no">Regretfully Decline</option>
+            </select>
+          </div>
+          <div class="rsvp-field">
+            <label for="rsvp-dietary">Dietary Requirements</label>
+            <input type="text" id="rsvp-dietary" placeholder="Any dietary needs">
+          </div>
+        </div>
+        <div class="rsvp-field full-width">
+          <label for="rsvp-message">Message for the Couple</label>
+          <textarea id="rsvp-message" rows="4" placeholder="Write a message..."></textarea>
+        </div>
+        <button type="submit" class="rsvp-btn">Send RSVP</button>
+        <div class="rsvp-success" id="rsvpSuccess">Thank you! Your RSVP has been received.</div>
+      </form>
+    </div>
+  </section>
+
   <section class="bg-wrap faqs-wrap" id="faqs">
     <div class="faqs-inner">
       <h2 class="section-title reveal">Questions</h2>
@@ -584,6 +820,7 @@ html, body { width: 100%; min-height: 100vh; scroll-behavior: smooth; overflow-x
       <div class="footer-message reveal">We can't wait to celebrate with you.</div>
       <div class="footer-divider"></div>
       <div class="footer-names-bottom reveal">Khadijah & Muhammad</div>
+      <div style="margin-top:30px;"><a href="rsvp/details.html" style="font-size:12px;color:rgba(0,0,0,0.2);letter-spacing:1px;text-decoration:none;">&#9679;</a></div>
     </div>
   </section>
 
@@ -592,10 +829,27 @@ html, body { width: 100%; min-height: 100vh; scroll-behavior: smooth; overflow-x
 <script>
 function openEnvelope() {
   document.getElementById('envelope').classList.add('opened');
+  var music = document.getElementById('bgMusic');
+  music.play().catch(function() {});
+  document.getElementById('musicToggle').textContent = '\u266B';
   setTimeout(function() {
     document.getElementById('envelope-section').classList.add('hidden');
     document.getElementById('mainContent').classList.add('visible');
   }, 1600);
+}
+
+var musicPlaying = true;
+function toggleMusic() {
+  var music = document.getElementById('bgMusic');
+  var btn = document.getElementById('musicToggle');
+  if (musicPlaying) {
+    music.pause();
+    btn.textContent = '\u2716';
+  } else {
+    music.play().catch(function() {});
+    btn.textContent = '\u266B';
+  }
+  musicPlaying = !musicPlaying;
 }
 
 function toggleFaq(btn) {
@@ -615,6 +869,37 @@ function splitWords() {
   }).join(' ');
 }
 splitWords();
+
+function handleRsvp(e) {
+  e.preventDefault();
+  var entry = {
+    name: document.getElementById('rsvp-name').value,
+    email: document.getElementById('rsvp-email').value,
+    phone: document.getElementById('rsvp-phone').value,
+    guests: document.getElementById('rsvp-guests').value,
+    attendance: document.getElementById('rsvp-attendance').value,
+    dietary: document.getElementById('rsvp-dietary').value,
+    message: document.getElementById('rsvp-message').value
+  };
+  fetch('http://localhost:3001/rsvp', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(entry)
+  }).then(function(res) { return res.json(); })
+    .then(function() {
+      document.getElementById('rsvpSuccess').classList.add('show');
+      e.target.reset();
+      setTimeout(function() {
+        document.getElementById('rsvpSuccess').classList.remove('show');
+      }, 5000);
+    }).catch(function() {
+      document.getElementById('rsvpSuccess').classList.add('show');
+      e.target.reset();
+      setTimeout(function() {
+        document.getElementById('rsvpSuccess').classList.remove('show');
+      }, 5000);
+    });
+}
 
 function revealOnScroll() {
   var wh = window.innerHeight;

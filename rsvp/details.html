@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RSVP Details - Wedding Admin</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Great+Vibes&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Cormorant Garamond', serif;
+  background: #fdf5eb;
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.header h1 {
+  font-family: 'Great Vibes', cursive;
+  font-size: 48px;
+  color: #800000;
+  margin-bottom: 10px;
+}
+
+.header p {
+  font-size: 16px;
+  color: #000;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.stats {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin: 30px 0;
+  flex-wrap: wrap;
+}
+
+.stat-box {
+  background: rgba(255,255,255,0.9);
+  border: 1px solid rgba(128,0,0,0.2);
+  border-radius: 10px;
+  padding: 20px 35px;
+  text-align: center;
+}
+
+.stat-box .num {
+  font-family: 'Great Vibes', cursive;
+  font-size: 36px;
+  color: #800000;
+}
+
+.stat-box .label {
+  font-size: 14px;
+  color: #000;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-top: 5px;
+}
+
+.btn-row {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 12px 30px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-maroon {
+  background: #800000;
+  color: #fff;
+}
+
+.btn-maroon:hover {
+  background: #600000;
+  transform: translateY(-2px);
+}
+
+.btn-outline {
+  background: transparent;
+  color: #800000;
+  border: 2px solid #800000;
+}
+
+.btn-outline:hover {
+  background: #800000;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.table-wrap {
+  overflow-x: auto;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255,255,255,0.95);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+thead {
+  background: #800000;
+  color: #fff;
+}
+
+th {
+  padding: 14px 16px;
+  font-size: 14px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-align: left;
+  font-weight: 500;
+}
+
+td {
+  padding: 12px 16px;
+  font-size: 15px;
+  color: #000;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(128,0,0,0.03); }
+
+.badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.badge-yes { background: #d4edda; color: #155724; }
+.badge-no { background: #f8d7da; color: #721c24; }
+
+.empty-msg {
+  text-align: center;
+  padding: 60px 20px;
+  color: #888;
+  font-size: 18px;
+}
+
+.no-data {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.no-data h2 {
+  font-family: 'Great Vibes', cursive;
+  font-size: 32px;
+  color: #800000;
+  margin-bottom: 10px;
+}
+
+.no-data p { color: #666; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>RSVP Details</h1>
+  <p>Khadijah & Muhammad's Wedding</p>
+</div>
+
+<div class="stats" id="stats"></div>
+
+<div class="btn-row">
+  <button class="btn btn-maroon" onclick="downloadExcel()">Download as Excel</button>
+  <button class="btn btn-outline" onclick="clearAll()">Clear All Data</button>
+  <a href="index.html" class="btn btn-outline" style="text-decoration:none;">Back to Website</a>
+</div>
+
+<div class="table-wrap" id="tableWrap"></div>
+
+<script>
+function getRsvps() {
+  return JSON.parse(localStorage.getItem('weddingRsvps') || '[]');
+}
+
+function render() {
+  var rsvps = getRsvps();
+  var wrap = document.getElementById('tableWrap');
+  var statsEl = document.getElementById('stats');
+
+  if (rsvps.length === 0) {
+    wrap.innerHTML = '<div class="no-data"><h2>No RSVPs Yet</h2><p>Responses will appear here once guests start submitting.</p></div>';
+    statsEl.innerHTML = '';
+    return;
+  }
+
+  var accepted = rsvps.filter(function(r) { return r.attendance === 'yes'; }).length;
+  var declined = rsvps.filter(function(r) { return r.attendance === 'no'; }).length;
+  var totalGuests = rsvps.reduce(function(sum, r) { return sum + parseInt(r.guests || 1); }, 0);
+
+  statsEl.innerHTML =
+    '<div class="stat-box"><div class="num">' + rsvps.length + '</div><div class="label">Total RSVPs</div></div>' +
+    '<div class="stat-box"><div class="num">' + accepted + '</div><div class="label">Attending</div></div>' +
+    '<div class="stat-box"><div class="num">' + declined + '</div><div class="label">Declined</div></div>' +
+    '<div class="stat-box"><div class="num">' + totalGuests + '</div><div class="label">Total Guests</div></div>';
+
+  var html = '<table><thead><tr>' +
+    '<th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>Guests</th><th>Attendance</th><th>Dietary</th><th>Message</th><th>Date</th>' +
+    '</tr></thead><tbody>';
+
+  rsvps.forEach(function(r, i) {
+    var badge = r.attendance === 'yes'
+      ? '<span class="badge badge-yes">Attending</span>'
+      : '<span class="badge badge-no">Declined</span>';
+    html += '<tr>' +
+      '<td>' + (i + 1) + '</td>' +
+      '<td>' + esc(r.name) + '</td>' +
+      '<td>' + esc(r.email) + '</td>' +
+      '<td>' + esc(r.phone || '-') + '</td>' +
+      '<td>' + esc(r.guests) + '</td>' +
+      '<td>' + badge + '</td>' +
+      '<td>' + esc(r.dietary || '-') + '</td>' +
+      '<td>' + esc(r.message || '-') + '</td>' +
+      '<td>' + esc(r.timestamp) + '</td>' +
+      '</tr>';
+  });
+
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
+}
+
+function esc(s) {
+  var d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function downloadExcel() {
+  var rsvps = getRsvps();
+  if (rsvps.length === 0) { alert('No RSVP data to download.'); return; }
+
+  var html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel">' +
+    '<head><meta charset="UTF-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>' +
+    '<x:Name>RSVP Details</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions>' +
+    '</x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body>' +
+    '<table border="1"><thead><tr>' +
+    '<th>Name</th><th>Email</th><th>Phone</th><th>Guests</th><th>Attendance</th><th>Dietary</th><th>Message</th><th>Date</th>' +
+    '</tr></thead><tbody>';
+
+  rsvps.forEach(function(r) {
+    html += '<tr>' +
+      '<td>' + esc(r.name) + '</td>' +
+      '<td>' + esc(r.email) + '</td>' +
+      '<td>' + esc(r.phone || '') + '</td>' +
+      '<td>' + esc(r.guests) + '</td>' +
+      '<td>' + (r.attendance === 'yes' ? 'Attending' : 'Declined') + '</td>' +
+      '<td>' + esc(r.dietary || '') + '</td>' +
+      '<td>' + esc(r.message || '') + '</td>' +
+      '<td>' + esc(r.timestamp) + '</td>' +
+      '</tr>';
+  });
+
+  html += '</tbody></table></body></html>';
+
+  var blob = new Blob(['\ufeff' + html], { type: 'application/vnd.ms-excel' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'details.xls';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function clearAll() {
+  if (confirm('Are you sure you want to delete all RSVP data? This cannot be undone.')) {
+    localStorage.removeItem('weddingRsvps');
+    render();
+  }
+}
+
+render();
+</script>
+
+</body>
+</html>
